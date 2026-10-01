@@ -1,7 +1,7 @@
 import os
 
 import streamlit as st
-from langchain_openrouter import ChatOpenRouter
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 
 
@@ -20,21 +20,18 @@ st.set_page_config(
 # LOAD OPENROUTER API KEY
 # ============================================================
 
-if "OPENROUTER_API_KEY" not in st.secrets:
-    st.error(
-        "OPENROUTER_API_KEY is not configured. "
-        "Please add it in Streamlit Community Cloud Secrets."
-    )
+if "OPENAI_API_KEY" not in st.secrets:
+    st.error("OPENAI_API_KEY is not configured.")
     st.stop()
 
-os.environ["OPENROUTER_API_KEY"] = st.secrets["OPENROUTER_API_KEY"]
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
 
-MODEL = "openrouter/free"
+MODEL = "gpt-5.6-luna"
 
 TEMPERATURE_MAGIC = 0.2
 TEMPERATURE_INSTRUCTIONS = 0.2
@@ -69,22 +66,22 @@ st.divider()
 @st.cache_resource
 def get_magic_llm():
 
-    return ChatOpenRouter(
+    return ChatOpenAI(
         model=MODEL,
-        temperature=TEMPERATURE_MAGIC,
-        max_tokens=MAX_TOKENS_MAGIC,
-        max_retries=0,
+        temperature=0.2,
+        max_tokens=5000,
+        max_retries=0
     )
 
 
 @st.cache_resource
 def get_instructions_llm():
 
-    return ChatOpenRouter(
+    return ChatOpenAI(
         model=MODEL,
-        temperature=TEMPERATURE_INSTRUCTIONS,
-        max_tokens=MAX_TOKENS_INSTRUCTIONS,
-        max_retries=0,
+        temperature=0.2,
+        max_tokens=5000,
+        max_retries=0
     )
 
 
